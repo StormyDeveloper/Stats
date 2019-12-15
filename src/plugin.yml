@@ -1,0 +1,8 @@
+name: PlayerStats
+author: StormyDeveloper
+version: 1.0
+main: de.stormydeveloper.playerstats.Main
+
+commands:
+  PlayerStats:
+    aliases: [ps,pstats]
