@@ -69,24 +69,29 @@ public class PlayerStatsCommand implements CommandExecutor,TabExecutor {
 										+ "§6-> §bOnlineTime§4: "+dm.getOnlineTime()+"\n"
 										+ "§7=====================================================");
 							}else {
-								if(UUIDFetcher.getUUID(args[0]) != null) {
-									final DataManager dm = new DataManager(UUIDFetcher.getUUID(args[0]));
+								if(args[0].length() > 2 && args[0].length() > 17) {
+									if(UUIDFetcher.getUUID(args[0]) != null) {
+										final DataManager dm = new DataManager(UUIDFetcher.getUUID(args[0]));
+										
+										if(dm.isUserExists()) {
+											p.sendMessage("\n §7===== §6| §d"+args[0]+" §7- §aOnline §6| §7===== \n"
+													+ "§6-> §bKills§4: §e"+dm.getKills()+"\n"
+													+ "§6-> §bDeaths§4: §e"+dm.getDeaths()+"\n"
+													+ "§6-> §bFirstJoin§4: §e"+dm.getFirstJoin()+"\n"
+													+ "§6-> §bOnlineTime§4: "+dm.getOnlineTime()+"\n"
+													+ "§7=====================================================");
+										}else {
+											p.sendMessage(Prefix_c + "§c§lFalscher Spieler! §6Der Spieler §b"+args[0]+ "§6 war noch nie auf dem Server!");
+										}
+										
 									
-									if(dm.isUserExists()) {
-										p.sendMessage("\n §7===== §6| §d"+args[0]+" §7- §aOnline §6| §7===== \n"
-												+ "§6-> §bKills§4: §e"+dm.getKills()+"\n"
-												+ "§6-> §bDeaths§4: §e"+dm.getDeaths()+"\n"
-												+ "§6-> §bFirstJoin§4: §e"+dm.getFirstJoin()+"\n"
-												+ "§6-> §bOnlineTime§4: "+dm.getOnlineTime()+"\n"
-												+ "§7=====================================================");
 									}else {
-										p.sendMessage(Prefix_c + "§c§lFalscher Spieler! §6Der Spieler §b"+args[0]+ "§6 war noch nie auf dem Server!");
+										p.sendMessage(Prefix_c + "§c§lFalscher Spieler! §6Der Spieler §b"+args[0]+ "§6 exsistiert nicht!");
 									}
-									
-								
 								}else {
 									p.sendMessage(Prefix_c + "§c§lFalscher Spieler! §6Der Spieler §b"+args[0]+ "§6 exsistiert nicht!");
 								}
+							
 								
 							}
 						}
@@ -125,23 +130,28 @@ public class PlayerStatsCommand implements CommandExecutor,TabExecutor {
 															+ "§6-> §bOnlineTime§4: "+dm.getOnlineTime()+"\n"
 															+ "§7===================================================================");
 					}else {
-						if(UUIDFetcher.getUUID(args[0]) != null) {
-							final DataManager dm = new DataManager(UUIDFetcher.getUUID(args[0]));
-							
-							if(dm.isUserExists()) {
-								Bukkit.getConsoleSender().sendMessage("\n §7===== §6| §d"+args[0]+" §7- §cOffline §6| §7===== \n"
-										+ "§6-> §bKills§4: §e"+dm.getKills()+"\n"
-										+ "§6-> §bDeaths§4: §e"+dm.getDeaths()+"\n"
-										+ "§6-> §bFirstJoin§4: §e"+dm.getFirstJoin()+"\n"
-										+ "§6-> §bOnlineTime§4: "+dm.getOnlineTime()+"\n"
-										+ "§6-> §bLastOnline§4:§e "+dm.getLastOffline()+"\n"
-										+ "§7===================================================================");
+						if(args[0].length() > 2 && args[0].length() > 17) {
+							if(UUIDFetcher.getUUID(args[0]) != null) {
+								final DataManager dm = new DataManager(UUIDFetcher.getUUID(args[0]));
+								
+								if(dm.isUserExists()) {
+									Bukkit.getConsoleSender().sendMessage("\n §7===== §6| §d"+args[0]+" §7- §cOffline §6| §7===== \n"
+											+ "§6-> §bKills§4: §e"+dm.getKills()+"\n"
+											+ "§6-> §bDeaths§4: §e"+dm.getDeaths()+"\n"
+											+ "§6-> §bFirstJoin§4: §e"+dm.getFirstJoin()+"\n"
+											+ "§6-> §bOnlineTime§4: "+dm.getOnlineTime()+"\n"
+											+ "§6-> §bLastOnline§4:§e "+dm.getLastOffline()+"\n"
+											+ "§7===================================================================");
+								}else {
+									Bukkit.getConsoleSender().sendMessage(Prefix_c + "§cFalscher Spieler! §6Der Spieler §b"+args[0]+ "§6 war noch nie auf dem Server!");
+								}
 							}else {
-								Bukkit.getConsoleSender().sendMessage(Prefix_c + "§cFalscher Spieler! §6Der Spieler §b"+args[0]+ "§6 war noch nie auf dem Server!");
+								Bukkit.getConsoleSender().sendMessage(Prefix_c + "§cFalscher Spieler! §6Der Spieler §b"+args[0]+ "§6 exsistiert nicht!");
 							}
 						}else {
 							Bukkit.getConsoleSender().sendMessage(Prefix_c + "§cFalscher Spieler! §6Der Spieler §b"+args[0]+ "§6 exsistiert nicht!");
 						}
+						
 					}
 				}else {
 					Bukkit.getConsoleSender().sendMessage(Prefix_c + "§cFalscher Syntax! §6/PlayerStats §e<SPIELERNAME>");
