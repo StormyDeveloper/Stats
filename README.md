@@ -1,6 +1,6 @@
 # PlayerStats
 This is a Plugin for Spigot. It will be storage Kills,Deaths,FirstLogin,LastOnline and OnlineTime. <br>
-Sigotpage ->   <br>
+Sigotpage -> https://www.spigotmc.org/resources/%E2%97%8F-playerstats-%E2%97%8F.73506/  <br>
 
 <h2>Are you a developer?</h2>
 Then you can use the API of the Plugin.
