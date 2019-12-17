@@ -1,5 +1,5 @@
 # PlayerStats
-This is a Plugin for Spigot. Ist will be storage Kills,Deaths,FirstLogin,LastOnline and OnlineTime. <br>
+This is a Plugin for Spigot. It will be storage Kills,Deaths,FirstLogin,LastOnline and OnlineTime. <br>
 Sigotpage ->   <br>
 
 <h2>Are you a developer?</h2>
