@@ -2,81 +2,88 @@ package de.stormydeveloper.playerstats.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.mojang.util.UUIDTypeAdapter;
 
 public class UUIDFetcher {
 
-	public static UUID getUUID(String playername) {
-		String output = callURL("https://api.mojang.com/users/profiles/minecraft/" + playername);
+	public static final long FEBRUARY_2015 = 1422748800000L;
 
-		StringBuilder result = new StringBuilder();
+	private static Gson gson = new GsonBuilder().registerTypeAdapter(UUID.class, new UUIDTypeAdapter()).create();
 
-		readData(output, result);
+	private static final String UUID_URL = "https://api.mojang.com/users/profiles/minecraft/%s?at=%d";
+	private static final String NAME_URL = "https://api.mojang.com/user/profiles/%s/names";
+	private static Map<String, UUID> uuidCache = new HashMap<String, UUID>();
+	private static Map<UUID, String> nameCache = new HashMap<UUID, String>();
+	private static ExecutorService pool = Executors.newCachedThreadPool();
 
-		String u = result.toString();
+	private String name;
+	private UUID id;
 
-		String uuid = "";
-
-		for (int i = 0; i <= 31; i++) {
-			uuid = uuid + u.charAt(i);
-			if (i == 7 || i == 11 || i == 15 || i == 19) {
-				uuid = uuid + "-";
-			}
-		}
-
-		return UUID.fromString(uuid);
+	public static void getUUID(String name, Consumer<UUID> action) {
+		pool.execute(() -> action.accept(getUUID(name)));
 	}
 
-	private static void readData(String toRead, StringBuilder result) {
-		int i = 7;
-
-		while (i < 200) {
-			if (!String.valueOf(toRead.charAt(i)).equalsIgnoreCase("\"")) {
-
-				result.append(String.valueOf(toRead.charAt(i)));
-
-			} else {
-				break;
-			}
-
-			i++;
-		}
+	public static UUID getUUID(String name) {
+		return getUUIDAt(name, System.currentTimeMillis());
 	}
 
-	private static String callURL(String URL) {
-		StringBuilder sb = new StringBuilder();
-		URLConnection urlConn = null;
-		InputStreamReader in = null;
+	public static void getUUIDAt(String name, long timestamp, Consumer<UUID> action) {
+		pool.execute(() -> action.accept(getUUIDAt(name, timestamp)));
+	}
+
+	public static UUID getUUIDAt(String name, long timestamp) {
+		name = name.toLowerCase();
+		if (uuidCache.containsKey(name)) {
+			return uuidCache.get(name);
+		}
 		try {
-			URL url = new URL(URL);
-			urlConn = url.openConnection();
+			HttpURLConnection connection = (HttpURLConnection) new URL(String.format(UUID_URL, name, timestamp / 1000))
+					.openConnection();
+			connection.setReadTimeout(5000);
+			UUIDFetcher data = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())),
+					UUIDFetcher.class);
 
-			if (urlConn != null)
-				urlConn.setReadTimeout(60 * 1000);
-
-			if (urlConn != null && urlConn.getInputStream() != null) {
-				in = new InputStreamReader(urlConn.getInputStream(), Charset.defaultCharset());
-				BufferedReader bufferedReader = new BufferedReader(in);
-
-				if (bufferedReader != null) {
-					int cp;
-
-					while ((cp = bufferedReader.read()) != -1) {
-						sb.append((char) cp);
-					}
-
-					bufferedReader.close();
-				}
-			}
-
-			in.close();
+			uuidCache.put(name, data.id);
+			nameCache.put(data.id, data.name);
+			return data.id;
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
-		return sb.toString();
+		return null;
+	}
+
+	public static void getName(UUID uuid, Consumer<String> action) {
+		pool.execute(() -> action.accept(getName(uuid)));
+	}
+
+	
+	public static String getName(UUID uuid) {
+		if (nameCache.containsKey(uuid)) {
+			return nameCache.get(uuid);
+		}
+		try {
+			HttpURLConnection connection = (HttpURLConnection) new URL(
+					String.format(NAME_URL, UUIDTypeAdapter.fromUUID(uuid))).openConnection();
+			connection.setReadTimeout(5000);
+			UUIDFetcher[] nameHistory = gson.fromJson(
+					new BufferedReader(new InputStreamReader(connection.getInputStream())), UUIDFetcher[].class);
+			UUIDFetcher currentNameData = nameHistory[nameHistory.length - 1];
+			uuidCache.put(currentNameData.name.toLowerCase(), uuid);
+			nameCache.put(uuid, currentNameData.name);
+			return currentNameData.name;
+		} catch (Exception e) {
+		}
+		return null;
 	}
 }
