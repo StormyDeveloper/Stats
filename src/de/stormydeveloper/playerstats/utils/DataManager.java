@@ -288,7 +288,8 @@ public class DataManager {
 						long hours = minutes / 60;
 						long days = hours / 24;
 						
-						return "§6Tage §e-> §b"+days+" §6Stunden §e-> §b"+hours % 24+" §6Minuten §e-> §b"+minutes % 60 + " §6Sekunden §e-> §b"+seconds % 60;
+						return Main.getPlugin().getMessageFromFile("OnlineTimeDesign").replace("%days%", ""+days).replace("%hours%", ""+hours % 24).
+						replace("%minutes%", ""+minutes % 60).replace("%seconds%",  ""+seconds % 60);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -301,7 +302,8 @@ public class DataManager {
 				long hours = minutes / 60;
 				long days = hours / 24;
 				
-				return "§6Tage §e-> §b"+days+" §6Stunden §e-> §b"+hours % 24+" §6Minuten §e-> §b"+minutes % 60 + " §6Sekunden §e-> §b"+seconds % 60;
+				return Main.getPlugin().getMessageFromFile("OnlineTimeDesign").replace("%days%", ""+days).replace("%hours%", ""+hours % 24).
+						replace("%minutes%", ""+minutes % 60).replace("%seconds%",  ""+seconds % 60);
 			}
 		}else {
 			if(isMySQLExists()) {
@@ -316,7 +318,8 @@ public class DataManager {
 						long hours = minutes / 60;
 						long days = hours / 24;
 						
-						return "§6Tage §e-> §b"+days+" §6Stunden §e-> §b"+hours % 24+" §6Minuten §e-> §b"+minutes % 60 + " §6Sekunden §e-> §b"+seconds % 60;
+						return Main.getPlugin().getMessageFromFile("OnlineTimeDesign").replace("%days%", ""+days).replace("%hours%", ""+hours % 24).
+								replace("%minutes%", ""+minutes % 60).replace("%seconds%",  ""+seconds % 60);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -329,7 +332,8 @@ public class DataManager {
 				long hours = minutes / 60;
 				long days = hours / 24;
 				
-				return "§6Tage §e-> §b"+days+" §6Stunden §e-> §b"+hours % 24+" §6Minuten §e-> §b"+minutes % 60 + " §6Sekunden §e-> §b"+seconds % 60;
+				return Main.getPlugin().getMessageFromFile("OnlineTimeDesign").replace("%days%", ""+days).replace("%hours%", ""+hours % 24).
+						replace("%minutes%", ""+minutes % 60).replace("%seconds%",  ""+seconds % 60);
 			}
 			
 		}
